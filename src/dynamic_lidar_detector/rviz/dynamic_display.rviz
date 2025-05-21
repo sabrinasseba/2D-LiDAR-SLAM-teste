@@ -1,0 +1,23 @@
+Panels:
+  - Class: rviz/Displays
+    Name: Displays
+
+Visualization Manager:
+  Class: ""
+  Displays:
+    - Name: Grid
+      Class: rviz/Grid
+      Enabled: true
+    - Name: Dynamic Points
+      Class: rviz/PointCloud2
+      Enabled: true
+      Topic: /dynamic_points
+      Queue Size: 10
+      Style: Points
+      Size (Pixels): 3
+      Color Transformer: RGB8
+  Fixed Frame: velodyne
+
+  Name: root
+  Global Options:
+    Fixed Frame: velodyne

@@ -1,0 +1,14 @@
+Visualization Manager:
+  Class: ""
+  Displays:
+    - Name: Dynamic Points
+      Enabled: true
+      Class: rviz/PointCloud2
+      Topic: /dynamic_points
+      Queue Size: 1
+      Color Transformer: RGB8
+      Style: Points
+      Size (Pixels): 3
+  Fixed Frame: velodyne
+  Global Options:
+    Fixed Frame: velodyne

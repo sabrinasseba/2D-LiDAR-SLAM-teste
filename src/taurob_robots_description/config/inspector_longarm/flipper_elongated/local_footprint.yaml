@@ -1,0 +1,4 @@
+# Robot footprint param used by local planners
+footprint: ' [[-0.37, -0.30], [0.71, -0.30], [0.71, 0.30], [-0.37, 0.30]]'
+footprint_padding: 0.04
+robot_radius: 0.0

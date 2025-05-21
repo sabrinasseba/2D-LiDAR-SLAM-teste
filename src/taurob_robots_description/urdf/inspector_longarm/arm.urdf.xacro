@@ -1,0 +1,319 @@
+<?xml version="1.0"?>
+
+<!-- 
+    * This file describes the longarm for the robot type: Inspector
+    *
+    * Copyright (c) 2022 taurob GmbH. All rights reserved. Confidential and proprietary.
+    * Perfektastrasse 57/7, 1230 Wien, Austria. office@taurob.com
+-->
+
+<robot name="taurob_inspector_longarm" xmlns:xacro="http://ros.org/wiki/xacro">
+
+    <!-- [BEGIN] === Macro: Inspector Longarm === -->
+    <xacro:macro name="inspector_longarm" params="collision_model">
+
+        <!-- [BEGIN] === Joint: Arm Joint 1 === -->
+        <joint name="arm_joint_1" type="revolute">
+            <origin xyz="0 0 0" rpy="0 0 -2.00713"/>
+            <axis xyz="0 0 1"/>
+            <limit lower="0.020" upper="5.655" effort="100" velocity="0.2"/>
+            <parent link="arm_flange_link"/>
+            <child link="arm_link_1"/>
+        </joint>
+        
+        <!-- [BEGIN] === Link: arm_link_1 === -->
+        <link name="arm_link_1">
+            <xacro:inertial_cuboid_with_pose mass="1.786" x_length="0.20" y_length="0.20" z_length="0.20">
+                <origin xyz="0.0 0.0 0.0" rpy="0 0 0"/>
+            </xacro:inertial_cuboid_with_pose>
+
+            <visual>
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+                <geometry>
+                    <mesh filename="package://taurob_robots_description/meshes/longarm_inspector/sensor_tower.dae"/>
+                </geometry>
+                <material name="orange">
+                    <color rgba="1.0 0.3568627450980392 0.0 1.0"/>
+                </material>
+            </visual>
+
+            <xacro:if value="${collision_model  == 'simple'}">
+                <collision>
+                    <origin xyz="-0.115 0.048 0.082" rpy="0 0 ${M_PI/2}"/>
+                    <geometry>
+                        <box size="0.19 0.095 0.16"/>
+                    </geometry>
+                </collision>
+
+                <collision>
+                    <origin xyz="0 0.1 0.075" rpy="${M_PI/2} 0 0"/>
+                    <geometry>
+                       <cylinder radius="0.06" length="0.08"/>
+                    </geometry>
+                </collision>
+
+                <collision>
+                    <origin xyz="0 0.00 0.075" rpy="${M_PI/2} 0 0"/>
+                    <geometry>
+                       <cylinder radius="0.075" length="0.1"/>
+                    </geometry>
+                </collision>
+
+                <collision>
+                    <origin xyz="-0.0625 0.03 0.21" rpy="0 0 ${M_PI/2}"/>
+                    <geometry>
+                        <cylinder radius="0.08" length="0.095"/>
+                    </geometry>
+                </collision>
+                
+                <collision>
+                    <origin xyz="-0.0625 0.03 0.30" rpy="0 0 ${M_PI/2}"/>
+                    <geometry>
+                        <cylinder radius="0.08" length="0.02"/>
+                    </geometry>
+                </collision>
+
+                <collision>
+                    <origin xyz="-0.06 0.03 0.345" rpy="0 0 ${M_PI/2}"/>
+                    <geometry>
+                        <cylinder radius="0.065" length="0.035"/>
+                    </geometry>
+                </collision>
+            </xacro:if>
+
+            <xacro:if value="${collision_model  == 'complex'}">
+                <collision>
+                    <origin xyz="0.0 0.0 0.0" rpy="0 0 0"/>
+                    <geometry>
+                        <mesh filename="package://taurob_robots_description/meshes/longarm_inspector/sensor_tower_collision.dae"/>
+                    </geometry>
+                </collision>
+            </xacro:if>
+        </link>
+   
+        <!-- [BEGIN] === Joint: Arm Joint 2 === -->
+        <joint name="arm_joint_2" type="revolute">
+            <origin xyz="0 -0.0592 0.079" rpy="${-M_PI/2} -0.20944 ${M_PI}"/>
+            <axis xyz="0 0 1"/>
+            <limit lower="0.020" upper="3.420843" effort="100" velocity="0.2"/>
+            <parent link="arm_link_1"/>
+            <child link="arm_link_2"/>
+            <dynamics damping="0.7" />
+        </joint>
+
+        <!-- [BEGIN] === Link: arm_link_2 === -->
+        <link name="arm_link_2">
+            <xacro:inertial_cuboid_with_pose mass="3.667" x_length="0.543" y_length="0.147" z_length="0.194">
+                <origin xyz="-0.25 0 0.035" rpy="0 0 0"/>
+            </xacro:inertial_cuboid_with_pose>
+            <visual>
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+                <geometry>
+                    <mesh filename="package://taurob_robots_description/meshes/longarm_inspector/j3_arm_link_1.dae"/>
+                </geometry>
+                <material name="orange">
+                    <color rgba="1.0 0.3568627450980392 0.0 1.0"/>
+                </material>
+            </visual>
+
+            <xacro:if value="${collision_model  == 'simple'}">
+                <collision>
+                    <origin xyz="-0.2 0 0.035" rpy="0 0 0" />
+                    <geometry>
+                        <box size="0.3 0.08 0.04" />
+                    </geometry>
+                </collision>
+
+                <collision>
+                    <origin xyz="0 0 0.035" rpy="0 0 0" />
+                    <geometry>
+                        <box size="0.1 0.1 0.06" />
+                    </geometry>
+                </collision>
+
+                <collision>
+                    <origin xyz="-0.415 0 -0.06" rpy="0 0 0" />
+                    <geometry>
+                       <cylinder radius="0.07" length="0.09"/>
+                    </geometry>
+                </collision>
+
+                <collision>
+                    <origin xyz="-0.415 0 0.035" rpy="0 0 0"/>
+                    <geometry>
+                       <cylinder radius="0.075" length="0.09"/>
+                    </geometry>
+                </collision>
+            </xacro:if>
+
+            <xacro:if value="${collision_model  == 'complex'}">
+                <collision>
+                    <origin xyz="0.0 0.0 0.0" rpy="0 0 0"/>
+                    <geometry>
+                        <mesh filename="package://taurob_robots_description/meshes/longarm_inspector/j3_arm_link_1_collision.dae"/>
+                    </geometry>
+                </collision>
+            </xacro:if>
+        </link>
+
+        <!-- [BEGIN] === Joint: Arm Joint 3 === -->
+        <joint name="arm_joint_3" type="revolute">
+            <origin xyz="-0.4167 0 0.0902" rpy="0 0 -0.239626"/>
+            <axis xyz="0 0 1"/>
+            <limit lower="0.018" upper="4.79966" effort="100" velocity="0.2"/>
+            <parent link="arm_link_2"/>
+            <child link="arm_link_3"/>
+            <dynamics damping="0.7" />
+        </joint>
+
+        <!-- [BEGIN] === Link: arm_link_3 === -->
+        <link name="arm_link_3">
+            <xacro:inertial_cuboid_with_pose mass="3.667" x_length="0.727" y_length="0.125" z_length="0.181">
+                <origin xyz="0.32 0 0.03" rpy="0 0 0"/>
+            </xacro:inertial_cuboid_with_pose>
+            <visual>
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+                <geometry>
+                    <mesh filename="package://taurob_robots_description/meshes/longarm_inspector/j4_arm_link_2.dae"/>
+                </geometry>
+                <material name="orange">
+                    <color rgba="1.0 0.3568627450980392 0.0 1.0"/>
+                </material>
+            </visual>
+        
+            <xacro:if value="${collision_model  == 'simple'}">
+                <collision>
+                    <origin xyz="0.25 0 0.03" rpy="0 0 0" />
+                    <geometry>
+                        <box size="0.6 0.08 0.04" />
+                    </geometry>
+                </collision>
+
+                <collision>
+                    <origin xyz="0 0 0.032" rpy="0 0 0" />
+                    <geometry>
+                        <box size="0.1 0.1 0.07" />
+                    </geometry>
+                </collision>
+
+                <collision>
+                    <origin xyz="0.61 0 0.025" rpy="0 0 0"/>
+                    <geometry>
+                       <cylinder radius="0.07" length="0.082"/>
+                    </geometry>
+                </collision>
+
+                <collision>
+                    <origin xyz="0.61 0 -0.06" rpy="0 0 0" />
+                    <geometry>
+                        <cylinder radius="0.07" length="0.09"/>
+                    </geometry>
+                </collision>
+            </xacro:if>
+
+            <xacro:if value="${collision_model  == 'complex'}">
+                <collision>
+                    <origin xyz="0.0 0.0 0.0" rpy="0 0 0"/>
+                    <geometry>
+                        <mesh filename="package://taurob_robots_description/meshes/longarm_inspector/j4_arm_link_2_collision.dae"/>
+                    </geometry>
+                </collision>
+            </xacro:if>
+        </link>
+
+        <!-- [BEGIN] === Joint: Arm Joint 4 === -->
+        <joint name="arm_joint_4" type="revolute">
+            <origin xyz="0.611 0.0 -0.116" rpy="0 ${M_PI} -0.0349066"/>
+            <axis xyz="0 0 1"/>
+            <limit lower="0.018" upper="4.79966" effort="100" velocity="0.18"/>
+            <parent link="arm_link_3"/>
+            <child link="arm_link_4"/>
+            <dynamics damping="0.7"/>
+        </joint>
+
+        <!-- [BEGIN] === Link: arm_link_4 === -->
+        <link name="arm_link_4">
+            <xacro:inertial_cuboid_with_pose mass="3.667" x_length="0.257" y_length="0.299" z_length="0.162">
+                <origin xyz="0.1 0.05 0.05" rpy="0 0 0"/>
+            </xacro:inertial_cuboid_with_pose>
+            <visual>
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+                <geometry>
+                    <mesh filename="package://taurob_robots_description/meshes/longarm_inspector/sensor_head.dae"/>
+                </geometry>
+                <material name="orange">
+                    <color rgba="1.0 0.3568627450980392 0.0 1.0"/>
+                </material>
+            </visual>
+
+            <xacro:if value="${collision_model  == 'simple'}">
+                <collision>
+                    <origin xyz="0.012 0 0.05" rpy="${M_PI/2} 0 0" />
+                    <geometry>
+                        <box size="0.12 0.08 0.11" />
+                    </geometry>
+                </collision>
+                <collision>
+                    <origin xyz="0.125 0.055 0.045" rpy="${M_PI/2} 0 0" />
+                    <geometry>
+                        <cylinder radius="0.082" length="0.295"/>
+                    </geometry>
+                </collision>
+            </xacro:if>
+
+            <xacro:if value="${collision_model  == 'complex'}">
+                <collision>
+                    <origin xyz="0.0 0.0 0.0" rpy="0 0 0"/>
+                    <geometry>
+                        <mesh filename="package://taurob_robots_description/meshes/longarm_inspector/sensor_head_collision.dae"/>
+                    </geometry>
+                </collision>
+            </xacro:if>
+        </link>
+
+        <!-- [BEGIN] ===  Arm transmission section. Needed for ros_control. === -->
+         <transmission name="arm_joint_1_joint_transmssion">
+            <type>transmission_interface/SimpleTransmission</type>
+            <joint name="arm_joint_1">
+                <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+            </joint>
+            <actuator name="arm_joint_1_motor">
+                <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+                <mechanicalReduction>1</mechanicalReduction>
+            </actuator>
+        </transmission>
+
+        <transmission name="arm_joint_2_joint_transmssion">
+            <type>transmission_interface/SimpleTransmission</type>
+            <joint name="arm_joint_2">
+                <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+            </joint>
+            <actuator name="arm_joint_2_motor">
+                <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+                <mechanicalReduction>1</mechanicalReduction>
+            </actuator>
+        </transmission>
+
+        <transmission name="arm_joint_3_joint_transmssion">
+            <type>transmission_interface/SimpleTransmission</type>
+            <joint name="arm_joint_3">
+                <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+            </joint>
+            <actuator name="arm_joint_3_motor">
+                <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+                <mechanicalReduction>1</mechanicalReduction>
+            </actuator>
+        </transmission>
+
+        <transmission name="arm_joint_4_joint_transmssion">
+            <type>transmission_interface/SimpleTransmission</type>
+            <joint name="arm_joint_4">
+                <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+            </joint>
+            <actuator name="arm_joint_4_motor">
+                <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+                <mechanicalReduction>1</mechanicalReduction>
+            </actuator>
+        </transmission>
+    </xacro:macro>
+</robot>

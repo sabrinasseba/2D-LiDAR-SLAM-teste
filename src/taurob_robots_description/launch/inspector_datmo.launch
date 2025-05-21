@@ -1,0 +1,95 @@
+<?xml version="1.0"?>
+<launch>
+
+    <!-- Simulation Args -->
+    <arg name="paused" default="true"/>
+    <arg name="use_sim_time" default="true"/>
+    <arg name="gui" default="true"/>
+    <arg name="headless" default="false"/>
+    <arg name="debug" default="false"/>
+    <arg name="verbose" default="true"/>
+    <arg name="rviz" default="true"/>
+    <arg name="start_rqt" default="true"/>
+    <arg name="start_laserscan" default="true"/>
+    <arg name="robot_model" default="inspector_longarm"/>
+    <arg name="x_offset" default="0"/>
+    <arg name="y_offset" default="0"/>
+    <arg name="z_offset" default="0.2"/>
+    <arg name="collision_model" default="simple"/>
+    <arg name="use_cameras" default="true" />
+    <arg name="use_moveit" default="false"/>
+    <arg name="world_file" default="$(find taurob_robots_description)/worlds/caxias.world"/>
+
+    <!-- Load Gazebo World -->
+    <include file="$(find gazebo_ros)/launch/empty_world.launch">
+        <arg name="world_name" value="$(arg world_file)"/>
+        <arg name="debug" value="$(arg debug)" />
+        <arg name="gui" value="$(arg gui)" />
+        <arg name="paused" value="$(arg paused)" />
+        <arg name="use_sim_time" value="$(arg use_sim_time)" />
+        <arg name="headless" value="$(arg headless)"/>
+        <arg name="verbose" value="$(arg verbose)" />
+    </include>
+
+    <!-- Load URDF -->
+    <param name="robot_description" command="$(find xacro)/xacro '$(find taurob_robots_description)/urdf/$(arg robot_model)/model_with_arm.urdf.xacro'
+        operation_mode:='simulation'
+        use_cameras:=$(arg use_cameras)
+        collision_mode:='$(arg collision_model)'"/>
+
+    <!-- Load Controllers -->
+    <rosparam file="$(find taurob_robots_description)/config/$(arg robot_model)/controller_state.yaml" command="load"/>
+    <rosparam file="$(find taurob_robots_description)/config/$(arg robot_model)/controller_flipper.yaml" command="load"/>
+    <rosparam file="$(find taurob_robots_description)/config/$(arg robot_model)/controller_arm.yaml" command="load"/>
+
+    <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false" output="screen"
+        args="joint_state_controller arm_trajectory_controller flipper_joint_position_controller"/>
+
+    <!-- Spawn Robot -->
+    <node name="spawn_robot" pkg="gazebo_ros" type="spawn_model" args="-param robot_description -urdf -model robot_description
+        -x $(arg x_offset) -y $(arg y_offset) -z $(arg z_offset)" respawn="false" output="screen"/>
+
+    <!-- Inicialização de Juntas -->
+    <node name="joint_setter" pkg="taurob_robots_description" type="initial_joint_angles.py"
+        output="screen" args="--robot_model inspector_longarm" />
+
+    <!-- Robot State Publisher -->
+    <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher" output="screen"/>
+
+    <!-- MoveIt (opcional) -->
+    <group if="$(eval arg('use_moveit')==true)">
+        <include file="$(find taurob_bring_up)/launch/1_moveit_arm.launch">
+            <arg name="robot_model" value="$(arg robot_model)" />
+        </include>   
+    </group>
+
+    <!-- RViz -->
+    <node if="$(arg rviz)" name="$(anon rviz)" pkg="rviz" type="rviz" respawn="false" output="screen"
+        args="-d $(find taurob_robots_description)/rviz/inspector_longarm.rviz"/>
+
+    <!-- RQT -->
+    <group if="$(eval arg('start_rqt')==true)">
+        <node name="tracker_rqt_dashboard" pkg="rqt_gui" type="rqt_gui" respawn="false" output="screen"/>
+    </group>
+
+    <!-- TF fixo: base_link -> laser -->
+    <node pkg="tf" type="static_transform_publisher" name="laser_tf_pub"
+        args="0 0 0 0 0 0 base_link laser 100"/>
+
+    <!-- Velodyne Laserscan: converte /velodyne_points -> /scan -->
+    <node pkg="velodyne_laserscan" type="velodyne_laserscan_node" name="velodyne_laserscan">
+        <param name="ring" value="0"/>
+        <param name="min_height" value="-1.0"/>
+        <param name="max_height" value="1.0"/>
+        <param name="transform_tolerance" value="0.01"/>
+        <param name="target_frame" value="laser"/>
+        <remap from="velodyne_points" to="/velodyne_points"/>
+        <remap from="scan" to="/scan"/>
+    </node>
+
+    <!-- datmo -->
+    <include file="$(find datmo)/launch/datmo.launch"/>
+    <include file="$(find datmo)/launch/adaptacao_datmo.launch"/>
+
+
+</launch>

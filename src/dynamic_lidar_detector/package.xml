@@ -1,0 +1,11 @@
+<package format="2">
+  <name>dynamic_lidar_detector</name>
+  <version>0.0.1</version>
+  <description>Dynamic object detection from LiDAR point clouds</description>
+  <maintainer email="you@example.com">Your Name</maintainer>
+  <license>MIT</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+  <exec_depend>rospy</exec_depend>
+  <exec_depend>sensor_msgs</exec_depend>
+</package>

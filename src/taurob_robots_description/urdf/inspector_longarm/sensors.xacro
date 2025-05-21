@@ -1,0 +1,88 @@
+<?xml version="1.0"?>
+<!-- 
+    * This file defines macros for the cameras used in the inspector_longarm robot.
+    *
+    * Copyright (c) 2022 taurob GmbH. All rights reserved. Confidential and proprietary.
+    * Perfektastrasse 57/7, 1230 Wien, Austria. office@taurob.com
+-->
+
+<robot name="taurob_inspector_longarm" xmlns:xacro="http://ros.org/wiki/xacro">
+
+    <!-- [BEGIN] === Macro: Sensors: Inspector Longarm === -->
+    <xacro:macro name="inspector_longarm_sensors" params="operation_mode use_cameras use_lidar use_imu odomTopic publishTF velodyneTopic velodyneHz use_gpu">
+
+            <!-- [BEGIN] === Physical Mode === -->
+            <xacro:include filename="$(find velodyne_description)/urdf/VLP-16.urdf.xacro"/>
+            <xacro:include filename="$(find taurob_robots_description)/urdf/imu_yostlab_macros.urdf.xacro"/>
+            <xacro:include filename="$(find taurob_robots_description)/urdf/inspector_camera_assembly.xacro"/>
+
+            <!-- [ADD] === Sensor: LIDAR === -->
+            <xacro:if value="${use_lidar}">
+                <xacro:VLP-16 parent="arm_link_1" name="velodyne" topic="$(arg velodyneTopic)" hz="$(arg velodyneHz)" samples="1024" gpu="${use_gpu}" min_range="0.45" collision_range="0.06">
+                    <origin xyz="-0.0625 0.0305 0.239" rpy="0 0 0" />
+                </xacro:VLP-16>
+            </xacro:if>
+
+            <!-- [ADD] === Sensor: IMU === -->
+            <xacro:if value="${use_imu}">
+                <xacro:imu_yostlab_macro parent="chassis_link">
+                    <origin xyz="0.424 0.007 -0.03199" rpy="0 0 0"/>
+                </xacro:imu_yostlab_macro>  
+            </xacro:if>
+
+            <!-- [ADD] === Sensor: Camera Sensortower === -->
+            <xacro:sensortower_camera_assembly
+                parent_link="arm_link_1"
+                front_rotation="$(optenv ROBOT_MODEL_CAMERA_SENSORTOWER_FRONT_OPTICAL_ROTATION 0.0)"
+                left_rotation="$(optenv ROBOT_MODEL_CAMERA_SENSORTOWER_LEFT_OPTICAL_ROTATION 0.0)"
+                back_rotation="$(optenv ROBOT_MODEL_CAMERA_SENSORTOWER_BACK_OPTICAL_ROTATION 0.0)"
+                right_rotation="$(optenv ROBOT_MODEL_CAMERA_SENSORTOWER_RIGHT_OPTICAL_ROTATION 0.0)">
+                <origin xyz="-0.059 0.0305 0.196" rpy="0 0 0"/>
+            </xacro:sensortower_camera_assembly>
+            <!-- [ADD] === Sensor: Camera Sensorhead === -->
+            <xacro:sensorhead_camera_assembly
+                parent_link="arm_link_4"
+                rgb_rotation="$(optenv ROBOT_MODEL_CAMERA_SENSORHEAD_RGB_OPTICAL_ROTATION 0.0)"
+                thermal_rotation="$(optenv ROBOT_MODEL_CAMERA_SENSORHEAD_THERMAL_OPTICAL_ROTATION 0.0)">
+                <origin xyz="0.16 0.189 0.043" rpy="${-90 * M_PI / 180} 0 ${90 * M_PI / 180}"/>
+            </xacro:sensorhead_camera_assembly>
+
+        <!-- [INCLUDE] === Macro: Sensors: Inspector Longarm === -->
+        <xacro:if value="${operation_mode  == 'simulation'}">
+            <xacro:include filename="$(find taurob_robots_description)/urdf/taurob_camera.xacro"/>
+            <xacro:include filename="$(find taurob_robots_description)/urdf/inspector_longarm/simulation.gazebo" />
+            <xacro:include filename="$(find taurob_robots_description)/urdf/taurob_camera.gazebo" />
+            <xacro:include filename="$(find taurob_robots_description)/urdf/taurob_logical_camera.gazebo" />
+
+            <xacro:inspector_longarm_ros_control_macro>
+                <robotNamespace></robotNamespace>
+            </xacro:inspector_longarm_ros_control_macro>
+
+            <!-- Force based move plugin-->
+            <xacro:inspector_longarm_chassis_gazebo_force_based_move_macro odomTopic="$(arg odomTopic)" publishTF="$(arg publishTF)" />
+
+            <!-- Flipper mimic plugin -->
+            <xacro:inspector_longarm_flipper_move_gazebo_macro />
+
+            <!-- Camera plugins & observer links: Simulation has not been asked for/updated for sometime. Time-critical releases mean we leave the sensor
+                 links defined for the simulation as is, and hopefully fix them at a later time. -->
+            <xacro:if value="$(arg use_cameras)">
+                <xacro:taurob_camera_sensorhead_gazebo suffix="rgb" resolution_x="720" resolution_y="480" horizontal_fov="1.5" near="1" far="100" port="8850">
+                </xacro:taurob_camera_sensorhead_gazebo>
+
+                <xacro:taurob_camera_gazebo suffix="front" resolution_x="720" resolution_y="480" horizontal_fov="1.5" near="1" far="100" port="8851">
+                </xacro:taurob_camera_gazebo>
+
+                <xacro:taurob_camera_gazebo suffix="right" resolution_x="720" resolution_y="480" horizontal_fov="1.5" near="1" far="100" port="8852">
+                </xacro:taurob_camera_gazebo>
+
+                <xacro:taurob_camera_gazebo suffix="back" resolution_x="720" resolution_y="480" horizontal_fov="1.5" near="1" far="100" port="8853">
+                </xacro:taurob_camera_gazebo>
+
+                <xacro:taurob_camera_gazebo suffix="left" resolution_x="720" resolution_y="480" horizontal_fov="1.5" near="1" far= "100" port="8854">
+                </xacro:taurob_camera_gazebo>
+
+            </xacro:if>
+        </xacro:if>
+    </xacro:macro>
+</robot>

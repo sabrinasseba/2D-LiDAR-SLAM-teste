@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+
+<!-- 
+    * This file contains macros for gazebo settings of the imu.
+    *
+    * Copyright (c) 2017 taurob GmbH. All rights reserved. Confidential and proprietary.
+    * Perfektastrasse 57/7, 1230 Wien, Austria. office@taurob.com
+-->
+
+<robot xmlns:xacro="http://ros.org/wiki/xacro">
+
+    <xacro:macro name="imu_yostlab_macro" params="parent *origin">
+
+        <!-- [BEGIN] ===  Imu links section. ===-->
+        <link name="imu_link">
+            <visual>
+                <origin xyz="0.0 0.0 0.0" rpy="0 0 0" />
+                <geometry>
+                    <box size="0.05 0.035 0.015"/> <!-- Yostlab IMU -->
+                </geometry>
+            </visual>
+        </link>
+
+        <!-- [BEGIN] ===  Imu joints section. ===-->
+        <joint name="imu_joint" type="fixed">
+            <xacro:insert_block name="origin"/>
+            <parent link="${parent}"/>
+            <child link="imu_link"/>
+        </joint>
+    </xacro:macro>
+
+</robot>

@@ -1,0 +1,74 @@
+<?xml version="1.0"?>
+
+<!-- 
+  * Meta xacro for the inspector longarm robot. 
+
+  * Copyright (c) 2023 taurob GmbH. All rights reserved. Confidential and proprietary.
+  * Perfektastrasse 57/7, 1230 Wien, Austria. office@taurob.com
+-->
+
+<robot name="taurob_inspector_longarm" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+
+  <!-- [BEGIN] === Arguments === -->
+    <xacro:arg name="use_gpu" default="false"/>  <!-- [INFO]: Set use_gpu to false if running on VMWare -->
+    <xacro:arg name="use_lidar" default="true" />  <!-- [INFO]: fixed/rotate/placement_rot (test only!) -->
+    <xacro:arg name="operation_mode" default="physical" />  <!-- [INFO]: Simulation/Physical -->
+    <xacro:arg name="use_imu" default="true" />
+    <xacro:arg name="use_cameras" default="true" />
+    <xacro:arg name="collision_model" default="simple" />
+    <xacro:arg name="odomTopic" default="odom" /> 
+    <xacro:arg name="publishTF" default="1" />
+    <xacro:arg name="velodyneTopic" default="/velodyne_points" />
+    <xacro:arg name="velodyneHz" default="20" />
+    <xacro:arg name="use_gpu" default="false" />
+
+    <!-- [BEGIN] === Properties === -->
+    <xacro:property name="use_gpu" value="$(arg use_gpu)" />
+    <xacro:property name="use_lidar" value="$(arg use_lidar)" />
+    <xacro:property name="operation_mode" value="$(arg operation_mode)" />
+    <xacro:property name="use_imu" value="$(arg use_imu)" />
+    <xacro:property name="use_cameras" value="$(arg use_cameras)" />
+    <xacro:property name="collision_model" value="$(arg collision_model)" />
+    <xacro:property name="odomTopic" value="$(arg odomTopic)" />
+    <xacro:property name="velodyneTopic" value="$(arg velodyneTopic)" />
+    <xacro:property name="velodyneHz" value="$(arg velodyneHz)" />
+    <xacro:property name="publishTF" value="$(arg publishTF)" />
+    <xacro:property name="M_PI" value="3.14159" />
+
+    <!-- [BEGIN] === Include section === -->
+    <xacro:include filename="$(find taurob_robots_description)/urdf/inspector_longarm/chassis.urdf.xacro"/>
+    <xacro:include filename="$(find taurob_robots_description)/urdf/inspector_longarm/arm.urdf.xacro"/>
+    <xacro:include filename="$(find taurob_robots_description)/urdf/inspector_longarm/sensors.xacro"/>
+    <xacro:include filename="$(find hector_xacro_tools)/urdf/inertia_tensors.urdf.xacro"/>
+
+    <!-- [BEGIN] === Link: A Link to base all other links on. === -->
+    <link name="base_link">
+      <origin xyz="0 0.0 0.0" rpy="0 0 0"/>
+    </link>
+
+    <!-- [BEGIN] === Insert: Chassis === -->
+    <xacro:inspector_longarm_chassis
+      parent_link  = "base_link"
+      flipper_type = "$(optenv ROBOT_MODEL_FLIPPER_TYPE regular)">
+    </xacro:inspector_longarm_chassis>
+    
+    <!-- [BEGIN] === Insert: Arm === -->
+    <xacro:inspector_longarm
+      collision_model = "$(arg collision_model)">
+    </xacro:inspector_longarm>
+
+    <!-- [BEGIN] === Insert: Sensors === -->
+    <xacro:inspector_longarm_sensors
+      operation_mode = "$(arg operation_mode)"
+      use_cameras = "$(arg use_cameras)"
+      use_lidar = "$(arg use_lidar)"
+      use_imu = "$(arg use_imu)"
+      odomTopic = "$(arg odomTopic)"
+      publishTF = "$(arg publishTF)"
+      velodyneTopic = "$(arg velodyneTopic)"
+      velodyneHz = "$(arg velodyneHz)"
+      use_gpu = "$(arg use_gpu)">
+    </xacro:inspector_longarm_sensors>
+
+</robot>
