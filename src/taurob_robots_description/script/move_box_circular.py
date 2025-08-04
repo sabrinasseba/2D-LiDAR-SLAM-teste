@@ -16,7 +16,7 @@ class MoveBox:
         self.center_x = 0.0   # Centro do círculo no eixo X
         self.center_y = 0.0   # Centro do círculo no eixo Y
         self.radius = 4.0     # Raio do movimento circular
-        self.angular_speed = 0.1  # Velocidade angular (radianos por ciclo)
+        self.angular_speed = 0.02  # Velocidade angular (radianos por ciclo)
         self.theta = 0.0      # Ângulo inicial
 
         # Define a posição fixa no solo
@@ -27,7 +27,7 @@ class MoveBox:
         self.move_box_loop()
 
     def move_box_loop(self):
-        rate = rospy.Rate(25)  # Taxa de atualização (25 Hz)
+        rate = rospy.Rate(15)  # Taxa de atualização (15 Hz)
 
         while not rospy.is_shutdown():
             # Calcula a nova posição com base no ângulo

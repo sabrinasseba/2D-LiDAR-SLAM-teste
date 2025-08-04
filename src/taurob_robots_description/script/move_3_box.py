@@ -5,7 +5,7 @@ from gazebo_msgs.msg import ModelState
 import math
 
 class MovingBox:
-    def __init__(self, model_name, pattern, center_x, center_y, distance=4.0, speed=0.02, angular_speed=0.1):
+    def _init_(self, model_name, pattern, center_x, center_y, distance=3.0, speed=0.03, angular_speed=0.02):
         self.model_name = model_name
         self.pattern = pattern
         self.center_x = center_x
@@ -20,9 +20,8 @@ class MovingBox:
             self.init_waypoints()
             self.current_target = 0
             self.x_pos, self.y_pos = self.waypoints[self.current_target]
-        elif self.pattern == 'circle':
-            self.x_pos = self.center_x + self.distance
-            self.y_pos = self.center_y
+        else:
+            raise ValueError(f"Padrão de movimento '{self.pattern}' não suportado.")
 
     def init_waypoints(self):
         if self.pattern == 'square':
@@ -42,26 +41,21 @@ class MovingBox:
                 self.waypoints.append((x, y))
 
     def update_position(self):
-        if self.pattern == 'circle':
-            self.x_pos = self.center_x + self.distance * math.cos(self.theta)
-            self.y_pos = self.center_y + self.distance * math.sin(self.theta)
-            self.theta += self.angular_speed
+        target_x, target_y = self.waypoints[self.current_target]
+        delta_x = target_x - self.x_pos
+        delta_y = target_y - self.y_pos
+        dist = (delta_x * 2 + delta_y * 2) ** 0.5
+        if dist > 0:
+            move_x = (delta_x / dist) * self.speed
+            move_y = (delta_y / dist) * self.speed
         else:
-            target_x, target_y = self.waypoints[self.current_target]
-            delta_x = target_x - self.x_pos
-            delta_y = target_y - self.y_pos
-            dist = (delta_x ** 2 + delta_y ** 2) ** 0.5
-            if dist > 0:
-                move_x = (delta_x / dist) * self.speed
-                move_y = (delta_y / dist) * self.speed
-            else:
-                move_x, move_y = 0.0, 0.0
+            move_x, move_y = 0.0, 0.0
 
-            self.x_pos += move_x
-            self.y_pos += move_y
+        self.x_pos += move_x
+        self.y_pos += move_y
 
-            if abs(self.x_pos - target_x) < 0.05 and abs(self.y_pos - target_y) < 0.05:
-                self.current_target = (self.current_target + 1) % len(self.waypoints)
+        if abs(self.x_pos - target_x) < 0.05 and abs(self.y_pos - target_y) < 0.05:
+            self.current_target = (self.current_target + 1) % len(self.waypoints)
 
     def get_model_state_msg(self):
         state = ModelState()
@@ -73,19 +67,18 @@ class MovingBox:
 
 
 class MultiBoxController:
-    def __init__(self):
+    def _init_(self):
         rospy.init_node('multi_box_controller', anonymous=True)
         rospy.wait_for_service('/gazebo/set_model_state')
         self.set_model_state = rospy.ServiceProxy('/gazebo/set_model_state', SetModelState)
 
-        # Cria três caixas com movimentos diferentes
+        # Apenas caixas com movimento em triângulo e quadrado
         self.boxes = [
             MovingBox('box_triangle', 'triangle', center_x=-10.0, center_y=0.0),
-            MovingBox('box_square', 'square', center_x=0.0, center_y=0.0),
-            MovingBox('box_circle', 'circle', center_x=10.0, center_y=0.0)
+            MovingBox('box_square', 'square', center_x=0.0, center_y=0.0)
         ]
 
-        rospy.loginfo("MultiBoxController is running! Boxes will move in triangle, square, and circle.")
+        rospy.loginfo("MultiBoxController is running! Boxes will move in triangle and square patterns.")
         self.run_loop()
 
     def run_loop(self):
@@ -94,7 +87,6 @@ class MultiBoxController:
             for box in self.boxes:
                 box.update_position()
                 state_msg = box.get_model_state_msg()
-                state_msg.model_name = box.model_name
                 try:
                     self.set_model_state(state_msg)
                 except rospy.ServiceException as e:
@@ -102,7 +94,7 @@ class MultiBoxController:
             rate.sleep()
 
 
-if __name__ == "__main__":
+if _name_ == "_main_":
     try:
         MultiBoxController()
     except rospy.ROSInterruptException:

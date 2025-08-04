@@ -23,7 +23,7 @@
     <arg name="collision_model" default="simple"/>
     <arg name="use_cameras" default="true" />
     <arg name="use_moveit" default="false" doc="Valid arguments: false or true" />
-    <arg name="world_file" default="$(find taurob_robots_description)/worlds/caxias.world"/>
+    <arg name="world_file" default="$(find taurob_robots_description)/worlds/3_box.world"/>
    <!-- Load Custom World Instead of Empty World -->
     <include file="$(find gazebo_ros)/launch/empty_world.launch">
      <arg name="world_name" value="$(arg world_file)"/>
@@ -36,10 +36,12 @@
     </include>
    <!-- [BEGIN] === Load Controllers === -->
 
-     <param name="robot_description" command="$(find xacro)/xacro '$(find taurob_robots_description)/urdf/$(arg robot_model)/model_with_arm.urdf.xacro'
+    <param name="robot_description" command="$(find xacro)/xacro '$(find taurob_robots_description)/urdf/$(arg robot_model)/model_with_arm.urdf.xacro'
         operation_mode:='simulation'
         use_cameras:=$(arg use_cameras) 
         collision_mode:='$(arg collision_model)'"/>
+
+   
 
     <rosparam file="$(find taurob_robots_description)/config/$(arg robot_model)/controller_state.yaml" command="load"/>
     <rosparam file="$(find taurob_robots_description)/config/$(arg robot_model)/controller_flipper.yaml" command="load"/>
@@ -49,7 +51,7 @@
      <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false" output="screen" args="joint_state_controller arm_trajectory_controller flipper_joint_position_controller"/>
     <!-- Spawn the moving box -->
       <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" output="screen"
-        args="-file ./src/taurob_robots_description/world/caxias.world -sdf -model moving_box" />
+        args="-file ./src/taurob_robots_description/world/3_box.world -sdf -model moving_box" />
     <!-- [BEGIN] === Spawn Robot === -->
     <node name="spawn_robot" pkg="gazebo_ros" type="spawn_model" args="-param robot_description
             -urdf

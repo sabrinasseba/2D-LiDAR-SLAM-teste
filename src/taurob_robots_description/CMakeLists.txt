@@ -19,6 +19,12 @@ catkin_install_python(
         script/move_box_circular.py
         script/move_box_triangular.py
         script/move_3_box.py
+        script/taurob_move.py
+        script/template.py
+        script/plot_bag.py
+        script/plot_bag2.py
+        script/rsme.py
+        script/pontilhado.py
     DESTINATION
         ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
