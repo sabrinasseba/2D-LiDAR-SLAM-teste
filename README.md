@@ -5,24 +5,31 @@ This repository contains the implementation of a real-time SLAM pipeline for dyn
 The simulated scenario can be visualized below. As shown, the robot in the center is equipped with a LiDAR sensor and it tracks the motion of the moving boxes around it. 
 
 
-In the output is possible to see that the system is able to detect and filter the boxes out of image.
-
 It speacializes in tracking of rectangle shaped objects since the tracking and object detection module of this work is inspired by the DATMO framework (Konstantinidis
 et al., 2020).
 
 ## Overview 
 
-Below it is available a synopsis of this work methods. If you are interested in reading the full method explanation the complete paper is available here.
+Below it is available a synopsis of this work methods. If you are interested in reading the full method explanation, the complete paper is available [here](https://github.com/sabrinasseba/2D-LiDAR-SLAM/blob/main/Paper.pdf).
 
 The system can be represented by the following flowchart:
 
 <p align="center">
-  <img width="400" height="400" src="https://github.com/sabrinasseba/2D-LiDAR-SLAM/blob/main/flowchart.png>
+  <img width="700" height="700" src="https://raw.githubusercontent.com/sabrinasseba/2D-LiDAR-SLAM/main/flowchart.png">
 </p>
 
-
-
 ### Results 
+
+The proposed 2D LiDAR SLAM system was tested in simulated environments with dynamic obstacles, using a robot equipped with a LiDAR sensor in Gazebo. Three configurations were evaluated: (1) unfiltered SLAM with raw scans, (2) filtering using fixed exclusion zones, and (3) adaptive filtering based on the estimated object dimensions. The quality of the maps was assessed using Intersection over Union (IoU) and Weighted RMSE metrics, showing reduced local errors and improved consistency when filtering was applied.
+
+| Scenario | IoU (Unfiltered) | RMSE (Unfiltered) | IoU (Filtered) | RMSE (Filtered) |
+|----------|------------------|-------------------|----------------|------------------|
+| Test 1   | 0.2234           | 0.0362            | 0.1503         | 0.0115       |
+| Test 2   | 0.1133           | 0.1763            | 0.1044         | 0.1675       |
+| Test 3   | 0.1787           | 0.0303            | 0.1223         | 0.0205       |
+
+
+
 
 ## Installation
 
