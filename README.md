@@ -21,25 +21,22 @@ The system can be represented by the following flowchart:
 ### 1. Dynamic Object Detection (DATMO)
 
 Moving objects are detected by comparing consecutive LiDAR frames. A point is considered dynamic if the displacement between two scans exceeds a threshold:
-$Δp=pt−pt−1$
+$Δp=pt−p(t−1)$
 
 To segment the scan, Euclidean clustering is applied with an adaptive distance threshold:
 $∥pi−pj∥<θ(r)=αr+β$
 
 
 This accounts for increased noise at larger distances from the sensor. Each cluster is approximated by a rectangle defined by the state vector:
-$x=[px,py,θ,l,w]T$
+$x=[p_x,p_y,θ,l,w]^T$
 
 Where:
-
-    px,pypx​,py​ are the object's position
-
-    θθ is orientation
-
-    l,wl,w are the rectangle's length and width
+- $p_x,p_y$are the object's position
+- $θ$ is orientation
+- $l,w$ are the rectangle's length and width
 
 Only objects with sufficient velocity are considered dynamic:
-$M={Oi∣∥vi∥>vmin}$
+$M={Oi∣ ∥vi∥>vmin}$
 
 ### 2. Dynamic Object Filtering
 
