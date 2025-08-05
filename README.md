@@ -18,19 +18,17 @@ The system can be represented by the following flowchart:
 
 
 
-1. Dynamic Object Detection (DATMO)
+### 1. Dynamic Object Detection (DATMO)
 
 Moving objects are detected by comparing consecutive LiDAR frames. A point is considered dynamic if the displacement between two scans exceeds a threshold:
-Δp=pt−pt−1
-Δp=pt​−pt−1​
+$Δp=pt−pt−1$
 
 To segment the scan, Euclidean clustering is applied with an adaptive distance threshold:
-∥pi−pj∥<θ(r)=αr+β
-∥pi​−pj​∥<θ(r)=αr+β
+$∥pi−pj∥<θ(r)=αr+β$
+
 
 This accounts for increased noise at larger distances from the sensor. Each cluster is approximated by a rectangle defined by the state vector:
-x=[px,py,θ,l,w]T
-x=[px​,py​,θ,l,w]T
+$x=[px,py,θ,l,w]T$
 
 Where:
 
@@ -41,32 +39,25 @@ Where:
     l,wl,w are the rectangle's length and width
 
 Only objects with sufficient velocity are considered dynamic:
-M={Oi∣∥vi∥>vmin}
-M={Oi​∣∥vi​∥>vmin​}
+$M={Oi∣∥vi∥>vmin}$
 
-2. Dynamic Object Filtering
+### 2. Dynamic Object Filtering
 
-To prevent dynamic elements from corrupting the map, the scan is filtered. Each point in polar coordinates (ri,αi)(ri​,αi​) is converted to Cartesian:
-si=(xi,yi)=(ricos⁡αi,risin⁡αi)
-si​=(xi​,yi​)=(ri​cosαi​,ri​sinαi​)
+To prevent dynamic elements from corrupting the map, the scan is filtered. Each point in polar coordinates $(ri,αi)(ri​,αi​)$ is converted to Cartesian:
+$si=(xi,yi)=(ricos⁡αi,risin⁡αi)$
 
-Each dynamic object OjOj​ is associated with a homogeneous transformation matrix:
-Tj=[cos⁡θjsin⁡θjpxj−sin⁡θjcos⁡θjpyj001]
-Tj​=
-​cosθj​−sinθj​0​sinθj​cosθj​0​pxj​pyj​1​
-​
+Each dynamic object $OjOj​$ is associated with a homogeneous transformation matrix:
+$Tj=[cos⁡θjsin⁡θjpxj−sin⁡θjcos⁡θjpyj001]$
 
 A bounding box BjBj​ is defined around each object:
-dj=max⁡(lj,wj)⋅λ2
-dj​=max(lj​,wj​)⋅2λ​
-Bj={(x,y)∈R2∣∣x∣≤dj,∣y∣≤dj}
-Bj​={(x,y)∈R2∣∣x∣≤dj​,∣y∣≤dj​}
+$dj=max⁡(lj,wj)⋅λ2$
+$Bj={(x,y)∈R2∣∣x∣≤dj,∣y∣≤dj}$
 
-Each scan point sisi​ is transformed into the object’s local frame via Tj−1Tj−1​ and removed if it falls inside any bounding box:
-s~i={∅,if ∃Oj∈M such that Tj−1si∈Bjsi,otherwise
-s~i​={∅,si​,​if ∃Oj​∈M such that Tj−1​si​∈Bj​otherwise​
+Each scan point sisi​ is transformed into the object’s local frame via $Tj−1Tj−1​$ and removed if it falls inside any bounding box:
+$s~i={∅,if ∃Oj∈M such that Tj−1si∈Bj$
+$si,otherwise$
 
-3. SLAM with Filtered Scans
+### 3. SLAM with Filtered Scans
 
 The filtered data is passed to Hector SLAM, a laser-based SLAM system that performs scan matching using Gauss-Newton optimization. It aligns incoming scans with the map and does not require odometry or IMU data, making it ideal for lightweight platforms.
 
