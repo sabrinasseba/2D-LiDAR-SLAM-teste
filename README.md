@@ -15,7 +15,7 @@ Below it is available a synopsis of this work methods. If you are interested in 
 The system can be represented by the following flowchart:
 
 <p align="center">
-  <img width="700" height="700" src="https://raw.githubusercontent.com/sabrinasseba/2D-LiDAR-SLAM/main/flowchart.png">
+  <img width="700" height="700" src="https://raw.githubusercontent.com/sabrinasseba/2D-LiDAR-SLAM/main/assets/flowchart.png">
 </p>
 
 ### Results 
