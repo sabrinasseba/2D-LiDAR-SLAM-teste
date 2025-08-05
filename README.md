@@ -18,46 +18,7 @@ The system can be represented by the following flowchart:
 
 
 
-### 1. Dynamic Object Detection (DATMO)
-
-Moving objects are detected by comparing consecutive LiDAR frames. A point is considered dynamic if the displacement between two scans exceeds a threshold:
-$Δp=pt−p(t−1)$
-
-To segment the scan, Euclidean clustering is applied with an adaptive distance threshold:
-$∥pi−pj∥<θ(r)=αr+β$
-
-
-This accounts for increased noise at larger distances from the sensor. Each cluster is approximated by a rectangle defined by the state vector:
-$x=[p_x,p_y,θ,l,w]^T$
-
-Where:
-- $p_x,p_y$are the object's position
-- $θ$ is orientation
-- $l,w$ are the rectangle's length and width
-
-Only objects with sufficient velocity are considered dynamic:
-$M={Oi∣ ∥vi∥>vmin}$
-
-### 2. Dynamic Object Filtering
-
-To prevent dynamic elements from corrupting the map, the scan is filtered. Each point in polar coordinates $(ri,αi)(ri​,αi​)$ is converted to Cartesian:
-$si=(xi,yi)=(ricos⁡αi,risin⁡αi)$
-
-Each dynamic object $OjOj​$ is associated with a homogeneous transformation matrix:
-$Tj=[cos⁡θjsin⁡θjpxj−sin⁡θjcos⁡θjpyj001]$
-
-A bounding box BjBj​ is defined around each object:
-$dj=max⁡(lj,wj)⋅λ2$
-$Bj={(x,y)∈R2∣∣x∣≤dj,∣y∣≤dj}$
-
-Each scan point sisi​ is transformed into the object’s local frame via $Tj−1Tj−1​$ and removed if it falls inside any bounding box:
-$s~i={∅,if ∃Oj∈M such that Tj−1si∈Bj$
-$si,otherwise$
-
-### 3. SLAM with Filtered Scans
-
-The filtered data is passed to Hector SLAM, a laser-based SLAM system that performs scan matching using Gauss-Newton optimization. It aligns incoming scans with the map and does not require odometry or IMU data, making it ideal for lightweight platforms.
-
+### Results 
 
 ## Installation
 
@@ -79,8 +40,11 @@ source devel/setup.bash
 
 ## Running the simulation
 
+This repository does not include the robot or the simulated environments used in our work. To run the framework correctly, it is necessary a 2D LiDAR sensor. As for the environment, any simulated world containing 3 or less rectangular objects is suitable.
+
+Run the launch below and the gazebo will open with the visual environment and RViz will open with the LiDAR view.
+
 ```
 roslaunch dynamic_lidar_detector dynamic_detection.launch
 ```
 
-## References
