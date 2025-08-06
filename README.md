@@ -2,9 +2,6 @@
 
 This repository contains the implementation of a real-time SLAM pipeline for dynamic environments, using only 2D LiDAR scans. The method performs detection, tracking, and filtering of moving objects, increasing the robustness and accuracy of SLAM in partially dynamic scenarios. It integrates a lightweight filtering mechanism with the Hector SLAM algorithm to build cleaner maps in simulation environments.
 
-The simulated scenario can be visualized below. As shown, the robot in the center is equipped with a LiDAR sensor and it tracks the motion of the moving boxes around it. 
-
-
 It speacializes in tracking of rectangle shaped objects since the tracking and object detection module of this work is inspired by the DATMO framework (Konstantinidis
 et al., 2020).
 
