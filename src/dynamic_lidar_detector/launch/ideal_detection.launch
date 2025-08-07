@@ -1,7 +1,7 @@
 <launch>
-  <!-- Nó do detector dinâmico -->
+  <!-- Dynamic detector node -->
   <node pkg="dynamic_lidar_detector" type="ideal_detection.py" name="dynamic_detector_node" output="screen"/>
 
-  <!-- RViz configurado para visualizar a nuvem de pontos dinâmica -->
+  <!-- RViz configured to visualize the dynamic point cloud -->
   <node pkg="rviz" type="rviz" name="rviz" args="-d $(find dynamic_lidar_detector)/rviz/dynamic_display.rviz" required="true"/>
 </launch>
