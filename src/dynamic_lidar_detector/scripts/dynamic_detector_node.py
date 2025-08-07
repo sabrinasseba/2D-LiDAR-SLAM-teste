@@ -6,10 +6,10 @@ import numpy as np
 import open3d as o3d
 import std_msgs.msg
 
-# ---------- PARÂMETROS DO USUÁRIO ----------
-initial_center = np.array([5.368, 0.0, 0.5]) # x, y, z iniciais da caixa
-box_size = np.array([1.0, 1.0, 1.0])        # comprimento, largura, altura
-# ------------------------------------------
+# ---------- USER PARAMETERS ----------
+initial_center = np.array([5.368, 0.0, 0.5])  # initial bounding box center (x, y, z)
+box_size = np.array([1.0, 1.0, 1.0])          # length, width, height of the box
+# -------------------------------------
 
 prev_pcd = None
 publisher = None
@@ -37,9 +37,9 @@ def get_points_in_box(points, center, size):
     return mask
 
 def colorize_pointcloud(points, dynamic_mask, in_box_mask):
-    colors = np.tile([0.3, 0.3, 0.3], (len(points), 1))  # cinza para todos
-    colors[in_box_mask] = [0.5, 0.5, 0.5]                # cinza claro dentro da caixa
-    colors[in_box_mask & dynamic_mask] = [1.0, 0.0, 0.0] # vermelho para dinâmicos na caixa
+    colors = np.tile([0.3, 0.3, 0.3], (len(points), 1))           # gray for all points
+    colors[in_box_mask] = [0.5, 0.5, 0.5]                         # light gray for points inside the box
+    colors[in_box_mask & dynamic_mask] = [1.0, 0.0, 0.0]          # red for dynamic points inside the box
     return colors
 
 def ros_to_open3d(pcl_msg):
