@@ -1,6 +1,6 @@
 <launch>
     <node name="dynamic_detector" pkg="dynamic_lidar_detector" type="dynamic_detector_node.py" output="screen" />
 
-    <!-- Inicia o RViz já com o frame e tópico certo -->
+    <!-- Launches RViz with the correct frame and topic configuration -->
     <node name="rviz" pkg="rviz" type="rviz" args="-d $(find dynamic_lidar_detector)/rviz/dynamic_display.rviz" required="true" />
 </launch>
