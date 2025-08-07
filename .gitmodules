@@ -1,0 +1,6 @@
+[submodule "src/datmo"]
+	path = src/datmo
+	url = https://github.com/kostaskonkk/datmo.git
+[submodule "src/CSF"]
+	path = src/CSF
+	url = https://github.com/jianboqi/CSF
