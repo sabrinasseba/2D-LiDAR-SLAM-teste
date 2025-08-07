@@ -10,7 +10,7 @@ class DynamicObjectTracker:
         rospy.init_node("gazebo_object_tracker")
 
         self.prev_positions = {}
-        self.target_models = ["moving_box"]  # nome do(s) objeto(s) no Gazebo
+        self.target_models = ["moving_box"]  # name(s) of the object(s) in Gazebo to track
         self.marker_pub = rospy.Publisher("/object_markers", Marker, queue_size=1)
 
         rospy.Subscriber("/gazebo/model_states", ModelStates, self.callback)
@@ -22,7 +22,7 @@ class DynamicObjectTracker:
             if name in self.target_models:
                 position = msg.pose[i].position
 
-                # Detectar movimento
+                # Detect movement
                 moved = False
                 if name in self.prev_positions:
                     prev = self.prev_positions[name]
