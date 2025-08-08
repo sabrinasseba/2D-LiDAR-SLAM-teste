@@ -63,4 +63,6 @@ gif gif gif gif gif gif
 | Test 2   | 0.1133           | 0.1763            | 0.1044         | 0.1675       |
 | Test 3   | 0.1787           | 0.0303            | 0.1223         | 0.0205       |
 
+## License
 
+This code is released under the [MIT](https://opensource.org/license/mit) for academic usage.
