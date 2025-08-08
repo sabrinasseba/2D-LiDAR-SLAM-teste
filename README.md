@@ -1,13 +1,13 @@
-# 2D LiDAR SLAM for Dynamic Environments 
+# 2D LiDAR SLAM for Dynamic Environments: Real-Time Detection and Filtering of Moving Objects
 
-This repository contains the implementation of a real-time SLAM pipeline for dynamic environments, using only 2D LiDAR scans. The method performs detection, tracking, and filtering of moving objects, increasing the robustness and accuracy of SLAM in partially dynamic scenarios. It integrates a lightweight filtering mechanism with the Hector SLAM algorithm to build cleaner maps in simulation environments.
+This repository contains the official implementation of the paper:
 
-It speacializes in tracking of rectangle shaped objects since the tracking and object detection module of this work is inspired by the DATMO framework (Konstantinidis
-et al., 2020).
+paper paper paper paper paper
 
-## Overview 
 
-Below it is available a synopsis of this work methods. If you are interested in reading the full method explanation, the complete paper is available [here](https://github.com/sabrinasseba/2D-LiDAR-SLAM/blob/main/Paper.pdf).
+We introduce a real-time SLAM pipeline tailored for dynamic environments using solely 2D LiDAR scans. The proposed method enhances SLAM robustness and accuracy in partially dynamic scenarios by incorporating modules for moving object detection, tracking, and filtering. A lightweight filtering mechanism is integrated with the Hector SLAM algorithm, enabling the construction of cleaner and more consistent maps within simulated environments.
+
+It speacializes in tracking of rectangle shaped objects since the tracking and object detection module of this work is inspired by the [DATMO framework](https://github.com/kostaskonkk/datmo/tree/master) (Konstantinidis et al., 2020).
 
 The system can be represented by the following flowchart:
 
@@ -15,18 +15,14 @@ The system can be represented by the following flowchart:
   <img width="700" height="700" src="https://raw.githubusercontent.com/sabrinasseba/2D-LiDAR-SLAM/main/assets/flowchart.png">
 </p>
 
-### Results 
+## Citation
 
-The proposed 2D LiDAR SLAM system was tested in simulated environments with dynamic obstacles, using a robot equipped with a LiDAR sensor in Gazebo. Three configurations were evaluated: (1) unfiltered SLAM with raw scans, (2) filtering using fixed exclusion zones, and (3) adaptive filtering based on the estimated object dimensions. The quality of the maps was assessed using Intersection over Union (IoU) and Weighted RMSE metrics, showing reduced local errors and improved consistency when filtering was applied.
+If you find our work useful, please consider citing our paper using the following BibTeX entry.
 
-| Scenario | IoU (Unfiltered) | RMSE (Unfiltered) | IoU (Filtered) | RMSE (Filtered) |
-|----------|------------------|-------------------|----------------|------------------|
-| Test 1   | 0.2234           | 0.0362            | 0.1503         | 0.0115       |
-| Test 2   | 0.1133           | 0.1763            | 0.1044         | 0.1675       |
-| Test 3   | 0.1787           | 0.0303            | 0.1223         | 0.0205       |
+```
 
 
-
+```
 
 ## Installation
 
@@ -45,7 +41,6 @@ cd ~/catkin_ws
 catkin_make
 source devel/setup.bash
 ```
-
 ## Running the simulation
 
 This repository does not include the robot or the simulated environments used in our work. To run the framework correctly, it is necessary a 2D LiDAR sensor. As for the environment, any simulated world containing 3 or less rectangular objects is suitable.
@@ -55,4 +50,17 @@ Run the launch below and the gazebo will open with the visual environment and RV
 ```
 roslaunch dynamic_lidar_detector dynamic_detection.launch
 ```
+
+## Experimental Results 
+
+The proposed 2D LiDAR SLAM system was tested in simulated environments with dynamic obstacles, using a robot equipped with a LiDAR sensor in Gazebo. Three configurations were evaluated: (1) unfiltered SLAM with raw scans, (2) filtering using fixed exclusion zones, and (3) adaptive filtering based on the estimated object dimensions. The quality of the maps was assessed using Intersection over Union (IoU) and Weighted RMSE metrics, showing reduced local errors and improved consistency when filtering was applied.
+
+gif gif gif gif gif gif 
+
+| Scenario | IoU (Unfiltered) | RMSE (Unfiltered) | IoU (Filtered) | RMSE (Filtered) |
+|----------|------------------|-------------------|----------------|------------------|
+| Test 1   | 0.2234           | 0.0362            | 0.1503         | 0.0115       |
+| Test 2   | 0.1133           | 0.1763            | 0.1044         | 0.1675       |
+| Test 3   | 0.1787           | 0.0303            | 0.1223         | 0.0205       |
+
 
