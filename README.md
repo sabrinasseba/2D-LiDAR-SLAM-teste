@@ -53,9 +53,15 @@ roslaunch dynamic_lidar_detector dynamic_detection.launch
 
 ## Experimental Results 
 
-The proposed 2D LiDAR SLAM system was tested in simulated environments with dynamic obstacles, using a robot equipped with a LiDAR sensor in Gazebo. Three configurations were evaluated: (1) unfiltered SLAM with raw scans, (2) filtering using fixed exclusion zones, and (3) adaptive filtering based on the estimated object dimensions. The quality of the maps was assessed using Intersection over Union (IoU) and Weighted RMSE metrics, showing reduced local errors and improved consistency when filtering was applied.
+<p align="center">
+  <img width="1000" height="1000" src="https://github.com/sabrinasseba/2D-LiDAR-SLAM-teste/blob/main/assets/experiments.gif?raw=true">
+</p>
 
-gif gif gif gif gif gif 
+The proposed 2D LiDAR SLAM system was evaluated in simulated environments with dynamic obstacles, using a robot equipped with a LiDAR sensor in Gazebo. Three configurations were analyzed: (1) unfiltered SLAM using raw scans, (2) filtering through fixed exclusion zones, and (3) adaptive filtering based on the estimated dimensions of moving objects.
+
+In the video above, the first frame illustrates the LiDAR scans of mobile objects along with their individual identifications, while the second frame presents the mapping process. It can be observed that the presence of dynamic obstacles did not compromise the quality of the generated map.
+
+The accuracy of the maps was quantitatively assessed using the Intersection over Union (IoU) and Weighted RMSE metrics, which demonstrated reduced local errors and enhanced map consistency when filtering techniques were applied.
 
 | Scenario | IoU (Unfiltered) | RMSE (Unfiltered) | IoU (Filtered) | RMSE (Filtered) |
 |----------|------------------|-------------------|----------------|------------------|
