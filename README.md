@@ -12,7 +12,7 @@ It speacializes in tracking of rectangle shaped objects since the tracking and o
 The system can be represented by the following flowchart:
 
 <p align="center">
-  <img width="700" height="700" src="https://raw.githubusercontent.com/sabrinasseba/2D-LiDAR-SLAM/main/assets/flowchart.png">
+  <img width="1000" height="600" src="https://github.com/sabrinasseba/2D-LiDAR-SLAM-teste/blob/main/assets/system_flowchart.png">
 </p>
 
 ## Citation
